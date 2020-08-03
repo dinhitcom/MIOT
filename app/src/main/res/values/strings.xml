@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">MIOT</string>
+    <string name="register_text_button_label"><u>Đăng ký</u></string>
+    <string name="them_phong"><u>Thêm phòng</u></string>
+    <string name="login_text_button_label"><u>Đăng nhập</u></string>
+</resources>
