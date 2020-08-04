@@ -54,4 +54,12 @@ public interface IRequestAPI {
     @PUT("/rooms/ports/update/{pid}")
     Call<ResponseResult> updatePort(@Path("pid") String pid);
 
+    @GET("/rooms/temperature")
+    Call<ResponseResult> getTemp();
+
+    @GET("/rooms/humidity")
+    Call<ResponseResult> getHumi();
+
+    @GET("rooms/airquality")
+    Call<ResponseResult> getAirQuality();
 }

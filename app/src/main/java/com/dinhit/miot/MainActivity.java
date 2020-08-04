@@ -5,15 +5,18 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dinhit.miot.adapter.UserRoomAdapter;
+import com.dinhit.miot.data.model.ResponseResult;
 import com.dinhit.miot.data.model.Room;
 import com.dinhit.miot.data.remote.IRequestAPI;
 import com.dinhit.miot.data.remote.RetrofitClient;
@@ -33,11 +36,10 @@ public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_UID = "com.dinhit.miot.extra.UID";
     public static final String EXTRA_NAME = "com.dinhit.miot.extra.NAME";
     private String uid ="", name="";
-    private TextView tvDateTime;
-    private RecyclerView recyclerView;
+    private TextView tvTemp, tvHumi, tvAir, tvTempIndicator, tvHumiIndicator, tvAirIndicator;
     private ArrayList<Room> roomtypes = new ArrayList<>();
     private UserRoomAdapter roomAdapter;
-    private TextView welcomeName, btnAddRoom;
+    private ImageView tempIndicator, humiIndicator, airIndicator;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,14 +47,14 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
         setContentView(R.layout.activity_main);
-        btnAddRoom = findViewById(R.id.btnAddRoomM);
+        TextView btnAddRoom = findViewById(R.id.btnAddRoomM);
         Intent intent = getIntent();
         name = intent.getStringExtra(LoginActivity.EXTRA_NAME);
         uid = intent.getStringExtra(LoginActivity.EXTRA_UID);
-        welcomeName = findViewById(R.id.tvWelcomeName);
+        TextView welcomeName = findViewById(R.id.tvWelcomeName);
         welcomeName.setText(name);
-        updateTime();
-        recyclerView = findViewById(R.id.rvRooms);
+        updateParams();
+        RecyclerView recyclerView = findViewById(R.id.rvRooms);
         getUserRoomsList(uid, recyclerView);
         btnAddRoom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,11 +95,95 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             String currentDateTime = java.text.DateFormat.getDateTimeInstance().format(new Date());
-            tvDateTime = findViewById(R.id.tvDateTime);
+            TextView tvDateTime = findViewById(R.id.tvDateTime);
             tvDateTime.setText(currentDateTime);
+            tvTemp = findViewById(R.id.tvTempValue);
+            tvHumi = findViewById(R.id.tvHumidityValue);
+            tvAir = findViewById(R.id.tvAirQualityValue);
+            tempIndicator = findViewById(R.id.tempIndicator);
+            humiIndicator = findViewById(R.id.humidityIndicator);
+            airIndicator = findViewById(R.id.airIndicator);
+            tvTempIndicator = findViewById(R.id.tvTempIndicator);
+            tvHumiIndicator = findViewById(R.id.tvHumidityIndicator);
+            tvAirIndicator = findViewById(R.id.tvAirIndicator);
+            Retrofit retrofit = RetrofitClient.getClient();
+            IRequestAPI requestAPI = retrofit.create(IRequestAPI.class);
+            Call<ResponseResult> callGetTemp = requestAPI.getTemp();
+            callGetTemp.enqueue(new retrofit2.Callback<ResponseResult>() {
+                @Override
+                public void onResponse(Call<ResponseResult> call, Response<ResponseResult> response) {
+                    tvTemp.setText(response.body().getMessage());
+                    int temp = Integer.parseInt(response.body().getMessage());
+                    if (temp < 20) {
+                        tvTempIndicator.setText("Thấp");
+                        tempIndicator.setImageResource(R.drawable.status_yellow_dot);
+                    } else
+                        if (temp > 30) {
+                            tvTempIndicator.setText("Cao");
+                            tempIndicator.setImageResource(R.drawable.status_red_dot);
+                        } else {
+                            tvTempIndicator.setText("Tốt");
+                            tempIndicator.setImageResource(R.drawable.status_green_dot);
+                        }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseResult> call, Throwable t) {
+                    tvTempIndicator.setText("Read fail");
+                    tempIndicator.setImageResource(R.drawable.status_gray_dot);
+                }
+            });
+            Call<ResponseResult> callGetHumi = requestAPI.getHumi();
+            callGetHumi.enqueue(new retrofit2.Callback<ResponseResult>() {
+                @Override
+                public void onResponse(Call<ResponseResult> call, Response<ResponseResult> response) {
+                    tvHumi.setText(response.body().getMessage());
+                    int humi = Integer.parseInt(response.body().getMessage());
+                    if (humi < 40) {
+                        tvHumiIndicator.setText("Thấp");
+                        humiIndicator.setImageResource(R.drawable.status_yellow_dot);
+                    } else
+                    if (humi > 70) {
+                        tvHumiIndicator.setText("Cao");
+                        humiIndicator.setImageResource(R.drawable.status_red_dot);
+                    } else {
+                        tvHumiIndicator.setText("Tốt");
+                        humiIndicator.setImageResource(R.drawable.status_green_dot);
+                    }
+                }
+                @Override
+                public void onFailure(Call<ResponseResult> call, Throwable t) {
+                    tvHumiIndicator.setText("Read fail");
+                    humiIndicator.setImageResource(R.drawable.status_gray_dot);
+                }
+            });
+            Call<ResponseResult> callGetAir = requestAPI.getAirQuality();
+            callGetAir.enqueue(new retrofit2.Callback<ResponseResult>() {
+                @Override
+                public void onResponse(Call<ResponseResult> call, Response<ResponseResult> response) {
+                    tvAir.setText(response.body().getMessage());
+                    Float air = Float.parseFloat(response.body().getMessage());
+                    if (air < 5) {
+                        tvAirIndicator.setText("Tốt");
+                        airIndicator.setImageResource(R.drawable.status_green_dot);
+                    } else
+                    if (air < 10) {
+                        tvAirIndicator.setText("Bình thường");
+                        airIndicator.setImageResource(R.drawable.status_yellow_dot);
+                    } else {
+                        tvAirIndicator.setText("Xấu");
+                        airIndicator.setImageResource(R.drawable.status_red_dot);
+                    }
+                }
+                @Override
+                public void onFailure(Call<ResponseResult> call, Throwable t) {
+                    tvAirIndicator.setText("Read fail");
+                    airIndicator.setImageResource(R.drawable.status_gray_dot);
+                }
+            });
         }
     };
-    private void updateTime() {
+    private void updateParams() {
         int initialDelay = 1000; //first update in miliseconds
         int period = 1000;      //nexts updates in miliseconds
         Timer timer = new Timer();

@@ -281,7 +281,7 @@
                 android:layout_weight="7">
 
                 <ImageView
-                    android:id="@+id/imageView13"
+                    android:id="@+id/airIndicator"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -290,7 +290,7 @@
                     app:srcCompat="@drawable/status_red_dot" />
 
                 <TextView
-                    android:id="@+id/textView50"
+                    android:id="@+id/tvAirIndicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -298,7 +298,7 @@
                     android:text="Xấu"
                     android:textColor="#303030"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageView13"
+                    app:layout_constraintStart_toEndOf="@+id/airIndicator"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
