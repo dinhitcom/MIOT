@@ -53,7 +53,8 @@ public interface IRequestAPI {
 
     @PUT("/rooms/ports/update/{pid}")
     Call<ResponseResult> updatePort(@Path("pid") String pid);
-
+    @PUT("/rooms/devices/{did}/turn")
+    Call<ResponseResult> turnDevice(@Path("did") String did, @Body Device device);
     @GET("/rooms/temperature")
     Call<ResponseResult> getTemp();
 

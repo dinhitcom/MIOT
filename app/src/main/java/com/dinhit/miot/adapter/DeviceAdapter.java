@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -100,6 +101,27 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
                 });
                 AlertDialog alert = builder.create();
                 alert.show();
+            }
+        });
+        holder.sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Retrofit retrofit = RetrofitClient.getClient();
+                IRequestAPI requestAPI = retrofit.create(IRequestAPI.class);
+                Device selectedDevice = devices.get(holder.getAdapterPosition());
+                selectedDevice.setStatus(holder.sw.isChecked());
+                Call<ResponseResult> call = requestAPI.turnDevice(selectedDevice.getId(), selectedDevice);
+                call.enqueue(new Callback<ResponseResult>() {
+                    @Override
+                    public void onResponse(Call<ResponseResult> call, Response<ResponseResult> response) {
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseResult> call, Throwable t) {
+
+                    }
+                });
             }
         });
         if (selectedPos ==  position) {

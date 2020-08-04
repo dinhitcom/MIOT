@@ -90,6 +90,7 @@ public class DeviceManagerActivity extends AppCompatActivity implements View.OnC
     public void onClick(View v) {
         if (v == backButton) {
             finish();
+
         }
         if (v == addDeviceBtn) {
             Intent intent = new Intent(DeviceManagerActivity.this, AddDeviceActivity.class);

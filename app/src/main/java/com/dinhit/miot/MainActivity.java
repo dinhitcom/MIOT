@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
