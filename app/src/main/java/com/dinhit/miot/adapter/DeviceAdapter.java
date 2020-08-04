@@ -1,6 +1,8 @@
 package com.dinhit.miot.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +17,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dinhit.miot.R;
 import com.dinhit.miot.data.model.Device;
+import com.dinhit.miot.data.model.ResponseResult;
+import com.dinhit.miot.data.remote.IRequestAPI;
+import com.dinhit.miot.data.remote.RetrofitClient;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder> {
     private Context context;
@@ -45,7 +56,50 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
         holder.btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("REMOVE_BUTTON", "Clicked "+holder.getAdapterPosition());
+                final int curPos = holder.getAdapterPosition();
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                builder.setTitle("Remove device");
+                builder.setMessage("Bạn có muốn xóa thiết bị này không?");
+                builder.setPositiveButton("Xóa", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Log.d("REMOVE_YES", ""+holder.getAdapterPosition());
+                        Retrofit retrofit = RetrofitClient.getClient();
+                        IRequestAPI requestAPI = retrofit.create(IRequestAPI.class);
+                        Device selectedDevice = devices.get(holder.getAdapterPosition());
+                        Call<ResponseResult> call = requestAPI.removeDevice(selectedDevice.getId());
+                        call.enqueue(new Callback<ResponseResult>() {
+                            @Override
+                            public void onResponse(Call<ResponseResult> call, Response<ResponseResult> response) {
+                                String status = response.body().getStatus().toString();
+                                String message = response.body().getMessage().toString();
+                                String id = response.body().getId().toString();
+                                if (status.equals("error")) {
+                                } else {
+                                    devices.remove(curPos);
+                                    notifyItemRemoved(curPos);
+                                    notifyItemRangeChanged(curPos, devices.size());
+                                    Log.d("REMOVE_SUCCESS", ""+message);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseResult> call, Throwable t) {
+
+                            }
+                        });
+                    }
+                });
+                builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Log.d("REMOVE_NO", ""+holder.getAdapterPosition());
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
         if (selectedPos ==  position) {
@@ -76,7 +130,19 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
             deviceName = itemView.findViewById(R.id.tvDeviceNameR);
             sw = itemView.findViewById(R.id.swDevice);
             btnRemove = itemView.findViewById(R.id.btnRemoveDevice);
+
         }
+    }
+    public void showSnackbar(View view, String message, int duration)
+    {
+        final Snackbar snackbar = Snackbar.make(view, message, duration);
+        snackbar.setAction("DISMISS", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        });
+        snackbar.show();
     }
 
 }

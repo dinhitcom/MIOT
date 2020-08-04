@@ -4,7 +4,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Device {
-
+    @SerializedName("_id")
+    @Expose
+    private String id;
     @SerializedName("deviceName")
     @Expose
     private String deviceName;
@@ -17,6 +19,14 @@ public class Device {
     @SerializedName("status")
     @Expose
     private Boolean status;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public Device(String deviceName, String devicePort, String deviceEspPort) {
         this.deviceName = deviceName;
@@ -55,4 +65,5 @@ public class Device {
     public void setStatus(Boolean status) {
         this.status = status;
     }
+
 }

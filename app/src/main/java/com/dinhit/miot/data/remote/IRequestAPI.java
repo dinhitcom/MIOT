@@ -13,6 +13,7 @@ import javax.xml.transform.Result;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -47,7 +48,10 @@ public interface IRequestAPI {
     Call<ResponseResult> addDevice(@Path("rid") String rid, @Body Device device);
     @GET("/rooms/{rid}/devices")
     Call<List<Device>> getDevices(@Path("rid") String rid);
+    @DELETE("/rooms/devices/{did}")
+    Call<ResponseResult> removeDevice(@Path("did") String did);
 
     @PUT("/rooms/ports/update/{pid}")
     Call<ResponseResult> updatePort(@Path("pid") String pid);
+
 }

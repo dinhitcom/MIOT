@@ -120,14 +120,4 @@ public class LoginActivity extends AppCompatActivity {
         });
         snackbar.show();
     }
-    /*public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) activity.getSystemService(
-                        Activity.INPUT_METHOD_SERVICE);
-        View focusedView = activity.getCurrentFocus();
-        if (focusedView != null) {
-            inputMethodManager.hideSoftInputFromWindow(focusedView.getWindowToken(),
-                    InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }*/
 }

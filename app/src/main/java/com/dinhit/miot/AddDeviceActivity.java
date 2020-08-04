@@ -84,6 +84,7 @@ public class AddDeviceActivity extends AppCompatActivity {
                 if (status.equals("error")) {
                     showSnackbar(view, message, 0);
                 } else {
+                    showSnackbar(view, message, 0);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -93,19 +94,17 @@ public class AddDeviceActivity extends AppCompatActivity {
                                 public void onResponse(Call<ResponseResult> call, Response<ResponseResult> response) {
 
                                 }
-
                                 @Override
                                 public void onFailure(Call<ResponseResult> call, Throwable t) {
 
                                 }
                             });
-                            showSnackbar(view, message, 0);
                             Intent intent = new Intent(AddDeviceActivity.this, DeviceManagerActivity.class);
                             intent.putExtra("EXTRA_ROOM_ID", roomId);
                             intent.putExtra("EXTRA_ROOM_NAME", roomName);
                             startActivity(intent);
                         }
-                    },1000);
+                    },800);
                 }
             }
 
