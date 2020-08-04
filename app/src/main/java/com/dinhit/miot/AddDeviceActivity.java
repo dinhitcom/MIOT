@@ -2,11 +2,13 @@ package com.dinhit.miot;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -48,6 +50,8 @@ public class AddDeviceActivity extends AppCompatActivity {
         btnAdddDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 deviceName = tvDevice.getText().toString();
                 devicePort = tvPort.getText().toString();
                 String msg = validData(deviceName, devicePort);

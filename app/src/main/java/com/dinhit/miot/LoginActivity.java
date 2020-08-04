@@ -1,10 +1,13 @@
 package com.dinhit.miot;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -41,6 +44,8 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 View loginView = findViewById(R.id.layoutLogin);
                 String uname = username.getText().toString();
                 String pwd = password.getText().toString();
@@ -115,4 +120,14 @@ public class LoginActivity extends AppCompatActivity {
         });
         snackbar.show();
     }
+    /*public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        View focusedView = activity.getCurrentFocus();
+        if (focusedView != null) {
+            inputMethodManager.hideSoftInputFromWindow(focusedView.getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }*/
 }

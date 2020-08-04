@@ -31,6 +31,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvRoomName" />
 
+    <TextView
+        android:id="@+id/tvDevicesLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Thiết bị:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@android:color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnAddDevice" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDevicesList"
         android:layout_width="0dp"
@@ -42,7 +54,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnAddDevice" />
+        app:layout_constraintTop_toBottomOf="@+id/tvDevicesLabel" />
 
     <ImageView
         android:id="@+id/imgBtnBack"
